@@ -12,6 +12,7 @@
 %}
 
 %x title
+%x tildebox
 
 %%
 
@@ -23,6 +24,9 @@
 "right of"        return 'right_of';
 "over"            return 'over';
 "note"            return 'note';
+"~~~"             { this.begin('tildebox'); return 'tildebox'; }
+<tildebox>[^~]+   { return 'MESSAGE'; }
+<tildebox>"~~~"   { this.popState(); }
 "title"           { this.begin('title'); return 'title'; }
 <title>[^\r\n]+   { this.popState(); return 'MESSAGE'; }
 ","               return ',';
@@ -53,7 +57,7 @@ document
 
 line
 	: statement { }
-	| 'NL'
+	| NL
 	;
 
 statement
@@ -78,9 +82,14 @@ placement
 	| 'right_of'  { $$ = Diagram.PLACEMENT.RIGHTOF; }
 	;
 
+addinfo
+	: { $$ = ""; }
+	| 'tildebox' message   { $$ = $2; }
+	;
+
 signal
-	: actor signaltype actor message
-	{ $$ = new Diagram.Signal($1, $2, $3, $4); }
+	: actor signaltype actor message { $$ = new Diagram.Signal($1, $2, $3, $4, ""); }
+	| actor signaltype actor message NL addinfo { $$ = new Diagram.Signal($1, $2, $3, $4, $6 ); }
 	;
 
 actor

@@ -50,6 +50,10 @@ Diagram.prototype.setTitle = function(title) {
   this.title = title;
 };
 
+Diagram.prototype.setAddInfo = function(add_info) {
+  this.add_info = add_info;
+};
+
 Diagram.prototype.addSignal = function(signal) {
   this.signals.push(signal);
 };
@@ -60,13 +64,14 @@ Diagram.Actor = function(alias, name, index) {
   this.index = index;
 };
 
-Diagram.Signal = function(actorA, signaltype, actorB, message) {
+Diagram.Signal = function(actorA, signaltype, actorB, message, addinfo) {
   this.type       = 'Signal';
   this.actorA     = actorA;
   this.actorB     = actorB;
   this.linetype   = signaltype & 3;
   this.arrowtype  = (signaltype >> 2) & 3;
   this.message    = message;
+  this.addinfo    = addinfo;
 };
 
 Diagram.Signal.prototype.isSelf = function() {
