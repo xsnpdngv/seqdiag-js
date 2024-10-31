@@ -400,7 +400,7 @@ _.extend(BaseTheme.prototype, {
     var topPadding = emptyVerticalSpace / 2;
     var y = y1 + topPadding;
 
-    this.drawText(x, y, signal.message, this.font_, ALIGN_LEFT);
+    this.drawText(x, y, signal.message, this.font_, ALIGN_LEFT).attr('class', 'signal');
   },
 
   drawSignal: function(signal, offsetY) {
@@ -412,13 +412,15 @@ _.extend(BaseTheme.prototype, {
     var y = offsetY + SIGNAL_MARGIN + SIGNAL_PADDING;
 
     // Draw the text in the middle of the signal
-    this.drawText(x, y, signal.message, this.font_, ALIGN_HORIZONTAL_CENTER);
+    this.drawText(x, y, signal.message, this.font_, ALIGN_HORIZONTAL_CENTER).attr('class', 'signal');
 
     // Draw the line along the bottom of the signal
     // Padding above, between message and line
     // Margin below the line, between line and next signal
     y = offsetY + signal.height - SIGNAL_PADDING;
     this.drawLine(aX, y, bX, y, signal.linetype, signal.arrowtype);
+
+    // console.log("Additional Info:", signal.addinfo);
   },
 
   drawNote: function(note, offsetY) {
