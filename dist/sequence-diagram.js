@@ -1228,7 +1228,7 @@ _.extend(BaseTheme.prototype, {
     var y2 = y1 + signal.height - 2 * SIGNAL_MARGIN - SIGNAL_PADDING;
 
     // Draw three lines, the last one with a arrow
-    this.drawLine(aX, y1, aX + SELF_SIGNAL_WIDTH, y1, signal.linetype);
+    this.drawLine(aX, y1, aX + SELF_SIGNAL_WIDTH, y1, signal.linetype).attr('class', 'signal');;
     this.drawLine(aX + SELF_SIGNAL_WIDTH, y1, aX + SELF_SIGNAL_WIDTH, y2, signal.linetype);
     this.drawLine(aX + SELF_SIGNAL_WIDTH, y2, aX, y2, signal.linetype, signal.arrowtype);
 
@@ -1257,7 +1257,7 @@ _.extend(BaseTheme.prototype, {
     // Padding above, between message and line
     // Margin below the line, between line and next signal
     y = offsetY + signal.height - SIGNAL_PADDING;
-    this.drawLine(aX, y, bX, y, signal.linetype, signal.arrowtype);
+    this.drawLine(aX, y, bX, y, signal.linetype, signal.arrowtype).attr('class', 'signal');
 
     // console.log("Additional Info:", signal.addinfo);
   },
