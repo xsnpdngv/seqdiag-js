@@ -64,14 +64,15 @@ Diagram.Actor = function(alias, name, index) {
   this.index = index;
 };
 
-Diagram.Signal = function(actorA, signaltype, actorB, message, addinfo) {
+Diagram.Signal = function(actorA, signaltype, actorB, message, meta, addinfo) {
   this.type       = 'Signal';
   this.actorA     = actorA;
   this.actorB     = actorB;
   this.linetype   = signaltype & 3;
   this.arrowtype  = (signaltype >> 2) & 3;
-  this.message    = message;
-  this.addinfo    = addinfo;
+  this.message    = message.trim();
+  this.meta       = meta.trim();
+  this.addinfo    = addinfo.trim();
 };
 
 Diagram.Signal.prototype.isSelf = function() {

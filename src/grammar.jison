@@ -16,6 +16,11 @@
 
 %%
 
+\t"~~~"               { this.begin('tildebox'); return 'tildebox'; }
+<tildebox>\t"~~~"     { this.popState(); }
+<tildebox>[^\t\r\n]+  { return 'meta'; }
+<tildebox>[^\t]+      { return 'addinfo'; }
+
 [\r\n]+           return 'NL';
 \s+               /* skip whitespace */
 \#[^\r\n]*        /* skip comments */
@@ -24,9 +29,6 @@
 "right of"        return 'right_of';
 "over"            return 'over';
 "note"            return 'note';
-"~~~"             { this.begin('tildebox'); return 'tildebox'; }
-<tildebox>[^~]+   { return 'MESSAGE'; }
-<tildebox>"~~~"   { this.popState(); }
 "title"           { this.begin('title'); return 'title'; }
 <title>[^\r\n]+   { this.popState(); return 'MESSAGE'; }
 ","               return ',';
@@ -36,7 +38,7 @@
 "-"               return 'LINE';
 ">>"              return 'OPENARROW';
 ">"               return 'ARROW';
-:[^\r\n]+         return 'MESSAGE';
+":"[^\r\n]+         return 'MESSAGE';
 <<EOF>>           return 'EOF';
 .                 return 'INVALID';
 
@@ -82,14 +84,10 @@ placement
 	| 'right_of'  { $$ = Diagram.PLACEMENT.RIGHTOF; }
 	;
 
-addinfo
-	: { $$ = ""; }
-	| 'tildebox' message   { $$ = $2; }
-	;
-
 signal
-	: actor signaltype actor message { $$ = new Diagram.Signal($1, $2, $3, $4, ""); }
-	| actor signaltype actor message NL addinfo { $$ = new Diagram.Signal($1, $2, $3, $4, $6 ); }
+	: actor signaltype actor message { $$ = new Diagram.Signal($1, $2, $3, $4, "", ""); }
+	| actor signaltype actor message NL tildebox addinfo { $$ = new Diagram.Signal($1, $2, $3, $4, "", $7 ); }
+	| actor signaltype actor message NL tildebox meta addinfo { $$ = new Diagram.Signal($1, $2, $3, $4, $7, $8 ); }
 	;
 
 actor
