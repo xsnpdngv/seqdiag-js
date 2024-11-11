@@ -74,14 +74,15 @@ Diagram.Actor = function(alias, name, index) {
   this.index = index;
 };
 
-Diagram.Signal = function(actorA, signaltype, actorB, message, addinfo) {
+Diagram.Signal = function(actorA, signaltype, actorB, message, meta, addinfo) {
   this.type       = 'Signal';
   this.actorA     = actorA;
   this.actorB     = actorB;
   this.linetype   = signaltype & 3;
   this.arrowtype  = (signaltype >> 2) & 3;
-  this.message    = message;
-  this.addinfo    = addinfo;
+  this.message    = message.trim();
+  this.meta       = meta.trim();
+  this.addinfo    = addinfo.trim();
 };
 
 Diagram.Signal.prototype.isSelf = function() {
@@ -224,7 +225,7 @@ var parser = function() {
     var o = function(k, v, o, l) {
         for (o = o || {}, l = k.length; l--; o[k[l]] = v) ;
         return o;
-    }, $V0 = [ 5, 8, 9, 13, 15, 26 ], $V1 = [ 1, 13 ], $V2 = [ 1, 17 ], $V3 = [ 26, 31, 32 ], parser = {
+    }, $V0 = [ 5, 8, 9, 13, 15, 27 ], $V1 = [ 1, 13 ], $V2 = [ 1, 17 ], $V3 = [ 27, 32, 33 ], parser = {
         trace: function() {},
         yy: {},
         symbols_: {
@@ -249,17 +250,18 @@ var parser = function() {
             ",": 20,
             left_of: 21,
             right_of: 22,
-            addinfo: 23,
+            signaltype: 23,
             tildebox: 24,
-            signaltype: 25,
-            ACTOR: 26,
-            linetype: 27,
-            arrowtype: 28,
-            LINE: 29,
-            DOTLINE: 30,
-            ARROW: 31,
-            OPENARROW: 32,
-            MESSAGE: 33,
+            addinfo: 25,
+            meta: 26,
+            ACTOR: 27,
+            linetype: 28,
+            arrowtype: 29,
+            LINE: 30,
+            DOTLINE: 31,
+            ARROW: 32,
+            OPENARROW: 33,
+            MESSAGE: 34,
             $accept: 0,
             $end: 1
         },
@@ -275,14 +277,16 @@ var parser = function() {
             21: "left_of",
             22: "right_of",
             24: "tildebox",
-            26: "ACTOR",
-            29: "LINE",
-            30: "DOTLINE",
-            31: "ARROW",
-            32: "OPENARROW",
-            33: "MESSAGE"
+            25: "addinfo",
+            26: "meta",
+            27: "ACTOR",
+            30: "LINE",
+            31: "DOTLINE",
+            32: "ARROW",
+            33: "OPENARROW",
+            34: "MESSAGE"
         },
-        productions_: [ 0, [ 3, 2 ], [ 4, 0 ], [ 4, 2 ], [ 6, 1 ], [ 6, 1 ], [ 7, 2 ], [ 7, 1 ], [ 7, 1 ], [ 7, 2 ], [ 12, 4 ], [ 12, 4 ], [ 19, 1 ], [ 19, 3 ], [ 16, 1 ], [ 16, 1 ], [ 23, 0 ], [ 23, 2 ], [ 11, 4 ], [ 11, 6 ], [ 17, 1 ], [ 10, 1 ], [ 25, 2 ], [ 25, 1 ], [ 27, 1 ], [ 27, 1 ], [ 28, 1 ], [ 28, 1 ], [ 14, 1 ] ],
+        productions_: [ 0, [ 3, 2 ], [ 4, 0 ], [ 4, 2 ], [ 6, 1 ], [ 6, 1 ], [ 7, 2 ], [ 7, 1 ], [ 7, 1 ], [ 7, 2 ], [ 12, 4 ], [ 12, 4 ], [ 19, 1 ], [ 19, 3 ], [ 16, 1 ], [ 16, 1 ], [ 11, 4 ], [ 11, 7 ], [ 11, 8 ], [ 17, 1 ], [ 10, 1 ], [ 23, 2 ], [ 23, 1 ], [ 28, 1 ], [ 28, 1 ], [ 29, 1 ], [ 29, 1 ], [ 14, 1 ] ],
         performAction: function(yytext, yyleng, yylineno, yy, yystate, $$, _$) {
             /* this == yyval */
             var $0 = $$.length - 1;
@@ -315,8 +319,7 @@ var parser = function() {
                 break;
 
               case 12:
-              case 17:
-              case 23:
+              case 22:
                 this.$ = $$[$0];
                 break;
 
@@ -333,46 +336,46 @@ var parser = function() {
                 break;
 
               case 16:
-                this.$ = "";
+                this.$ = new Diagram.Signal($$[$0 - 3], $$[$0 - 2], $$[$0 - 1], $$[$0], "", "");
+                break;
+
+              case 17:
+                this.$ = new Diagram.Signal($$[$0 - 6], $$[$0 - 5], $$[$0 - 4], $$[$0 - 3], "", $$[$0]);
                 break;
 
               case 18:
-                this.$ = new Diagram.Signal($$[$0 - 3], $$[$0 - 2], $$[$0 - 1], $$[$0], "");
+                this.$ = new Diagram.Signal($$[$0 - 7], $$[$0 - 6], $$[$0 - 5], $$[$0 - 4], $$[$0 - 1], $$[$0]);
                 break;
 
               case 19:
-                this.$ = new Diagram.Signal($$[$0 - 5], $$[$0 - 4], $$[$0 - 3], $$[$0 - 2], $$[$0]);
-                break;
-
-              case 20:
                 this.$ = yy.parser.yy.getActor(Diagram.unescape($$[$0]));
                 break;
 
-              case 21:
+              case 20:
                 this.$ = yy.parser.yy.getActorWithAlias(Diagram.unescape($$[$0]));
                 break;
 
-              case 22:
+              case 21:
                 this.$ = $$[$0 - 1] | $$[$0] << 2;
                 break;
 
-              case 24:
+              case 23:
                 this.$ = Diagram.LINETYPE.SOLID;
                 break;
 
-              case 25:
+              case 24:
                 this.$ = Diagram.LINETYPE.DOTTED;
                 break;
 
-              case 26:
+              case 25:
                 this.$ = Diagram.ARROWTYPE.FILLED;
                 break;
 
-              case 27:
+              case 26:
                 this.$ = Diagram.ARROWTYPE.OPEN;
                 break;
 
-              case 28:
+              case 27:
                 this.$ = Diagram.unescape($$[$0].substring(1));
             }
         },
@@ -392,83 +395,84 @@ var parser = function() {
             13: [ 1, 10 ],
             15: [ 1, 12 ],
             17: 11,
-            26: $V1
+            27: $V1
         }, {
             1: [ 2, 1 ]
         }, o($V0, [ 2, 3 ]), o($V0, [ 2, 4 ]), o($V0, [ 2, 5 ]), {
             10: 14,
-            26: [ 1, 15 ]
+            27: [ 1, 15 ]
         }, o($V0, [ 2, 7 ]), o($V0, [ 2, 8 ]), {
             14: 16,
-            33: $V2
+            34: $V2
         }, {
-            25: 18,
-            27: 19,
-            29: [ 1, 20 ],
-            30: [ 1, 21 ]
+            23: 18,
+            28: 19,
+            30: [ 1, 20 ],
+            31: [ 1, 21 ]
         }, {
             16: 22,
             18: [ 1, 23 ],
             21: [ 1, 24 ],
             22: [ 1, 25 ]
-        }, o([ 20, 29, 30, 33 ], [ 2, 20 ]), o($V0, [ 2, 6 ]), o($V0, [ 2, 21 ]), o($V0, [ 2, 9 ]), o($V0, [ 2, 28 ]), {
+        }, o([ 20, 30, 31, 34 ], [ 2, 19 ]), o($V0, [ 2, 6 ]), o($V0, [ 2, 20 ]), o($V0, [ 2, 9 ]), o($V0, [ 2, 27 ]), {
             17: 26,
-            26: $V1
+            27: $V1
         }, {
-            26: [ 2, 23 ],
-            28: 27,
-            31: [ 1, 28 ],
-            32: [ 1, 29 ]
-        }, o($V3, [ 2, 24 ]), o($V3, [ 2, 25 ]), {
+            27: [ 2, 22 ],
+            29: 27,
+            32: [ 1, 28 ],
+            33: [ 1, 29 ]
+        }, o($V3, [ 2, 23 ]), o($V3, [ 2, 24 ]), {
             17: 30,
-            26: $V1
+            27: $V1
         }, {
             17: 32,
             19: 31,
-            26: $V1
+            27: $V1
         }, {
-            26: [ 2, 14 ]
+            27: [ 2, 14 ]
         }, {
-            26: [ 2, 15 ]
+            27: [ 2, 15 ]
         }, {
             14: 33,
-            33: $V2
+            34: $V2
         }, {
-            26: [ 2, 22 ]
+            27: [ 2, 21 ]
         }, {
-            26: [ 2, 26 ]
+            27: [ 2, 25 ]
         }, {
-            26: [ 2, 27 ]
+            27: [ 2, 26 ]
         }, {
             14: 34,
-            33: $V2
+            34: $V2
         }, {
             14: 35,
-            33: $V2
+            34: $V2
         }, {
             20: [ 1, 36 ],
-            33: [ 2, 12 ]
-        }, o([ 5, 9, 13, 15, 26 ], [ 2, 18 ], {
+            34: [ 2, 12 ]
+        }, o([ 5, 9, 13, 15, 27 ], [ 2, 16 ], {
             8: [ 1, 37 ]
         }), o($V0, [ 2, 10 ]), o($V0, [ 2, 11 ]), {
             17: 38,
-            26: $V1
-        }, o($V0, [ 2, 16 ], {
-            23: 39,
-            24: [ 1, 40 ]
-        }), {
-            33: [ 2, 13 ]
-        }, o($V0, [ 2, 19 ]), {
-            14: 41,
-            33: $V2
-        }, o($V0, [ 2, 17 ]) ],
+            27: $V1
+        }, {
+            24: [ 1, 39 ]
+        }, {
+            34: [ 2, 13 ]
+        }, {
+            25: [ 1, 40 ],
+            26: [ 1, 41 ]
+        }, o($V0, [ 2, 17 ]), {
+            25: [ 1, 42 ]
+        }, o($V0, [ 2, 18 ]) ],
         defaultActions: {
             3: [ 2, 1 ],
             24: [ 2, 14 ],
             25: [ 2, 15 ],
-            27: [ 2, 22 ],
-            28: [ 2, 26 ],
-            29: [ 2, 27 ],
+            27: [ 2, 21 ],
+            28: [ 2, 25 ],
+            29: [ 2, 26 ],
             38: [ 2, 13 ]
         },
         parseError: function(str, hash) {
@@ -710,85 +714,88 @@ var parser = function() {
             performAction: function(yy, yy_, $avoiding_name_collisions, YY_START) {
                 switch ($avoiding_name_collisions) {
                   case 0:
-                    return 8;
-
-                  case 1:
-                  case 2:
-                    /* skip comments */
-                    break;
-
-                  case 3:
-                    return 9;
-
-                  case 4:
-                    return 21;
-
-                  case 5:
-                    return 22;
-
-                  case 6:
-                    return 18;
-
-                  case 7:
-                    return 15;
-
-                  case 8:
                     return this.begin("tildebox"), 24;
 
-                  case 9:
-                    return 33;
-
-                  case 10:
+                  case 1:
                     this.popState();
                     break;
 
-                  case 11:
-                    return this.begin("title"), 13;
-
-                  case 12:
-                    return this.popState(), 33;
-
-                  case 13:
-                    return 20;
-
-                  case 14:
-                  case 15:
+                  case 2:
                     return 26;
 
+                  case 3:
+                    return 25;
+
+                  case 4:
+                    return 8;
+
+                  case 5:
+                  case 6:
+                    /* skip comments */
+                    break;
+
+                  case 7:
+                    return 9;
+
+                  case 8:
+                    return 21;
+
+                  case 9:
+                    return 22;
+
+                  case 10:
+                    return 18;
+
+                  case 11:
+                    return 15;
+
+                  case 12:
+                    return this.begin("title"), 13;
+
+                  case 13:
+                    return this.popState(), 34;
+
+                  case 14:
+                    return 20;
+
+                  case 15:
                   case 16:
-                    return 30;
+                    return 27;
 
                   case 17:
-                    return 29;
-
-                  case 18:
-                    return 32;
-
-                  case 19:
                     return 31;
 
-                  case 20:
+                  case 18:
+                    return 30;
+
+                  case 19:
                     return 33;
 
+                  case 20:
+                    return 32;
+
                   case 21:
-                    return 5;
+                    return 34;
 
                   case 22:
+                    return 5;
+
+                  case 23:
                     return "INVALID";
                 }
             },
-            rules: [ /^(?:[\r\n]+)/i, /^(?:\s+)/i, /^(?:#[^\r\n]*)/i, /^(?:participant\b)/i, /^(?:left of\b)/i, /^(?:right of\b)/i, /^(?:over\b)/i, /^(?:note\b)/i, /^(?:~~~)/i, /^(?:[^~]+)/i, /^(?:~~~)/i, /^(?:title\b)/i, /^(?:[^\r\n]+)/i, /^(?:,)/i, /^(?:[^\->:,\r\n"]+)/i, /^(?:"[^"]+")/i, /^(?:--)/i, /^(?:-)/i, /^(?:>>)/i, /^(?:>)/i, /^(?:[^\r\n]+)/i, /^(?:$)/i, /^(?:.)/i ],
+            rules: [ /^(?:\t~~~)/i, /^(?:\t~~~)/i, /^(?:[^\t\r\n]+)/i, /^(?:[^\t]+)/i, /^(?:[\r\n]+)/i, /^(?:\s+)/i, /^(?:#[^\r\n]*)/i, /^(?:participant\b)/i, /^(?:left of\b)/i, /^(?:right of\b)/i, /^(?:over\b)/i, /^(?:note\b)/i, /^(?:title\b)/i, /^(?:[^\r\n]+)/i, /^(?:,)/i, /^(?:[^\->:,\r\n"]+)/i, /^(?:"[^"]+")/i, /^(?:--)/i, /^(?:-)/i, /^(?:>>)/i, /^(?:>)/i, /^(?::[^\r\n]+)/i, /^(?:$)/i, /^(?:.)/i ],
             conditions: {
                 tildebox: {
-                    rules: [ 9, 10 ],
+                    rules: [ 1, 2, 3 ],
                     inclusive: !1
                 },
                 title: {
-                    rules: [ 12 ],
+                    rules: [ 13 ],
                     inclusive: !1
                 },
                 INITIAL: {
-                    rules: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22 ],
+                    rules: [ 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ],
                     inclusive: !0
                 }
             }
