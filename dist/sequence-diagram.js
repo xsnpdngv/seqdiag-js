@@ -1223,10 +1223,14 @@ _.extend(BaseTheme.prototype, {
     var y = offsetY;
     _.each(this.diagram.actors, _.bind(function(a) {
       // Top box
-      this.drawActor(a, y, this.actorsHeight_);
+      var { rect, text } = this.drawActor(a, y, this.actorsHeight_);
+      rect.attr('class', 'actor-box');
+      text.attr('class', 'actor-text');
 
       // Bottom box
-      this.drawActor(a, y + this.actorsHeight_ + this.signalsHeight_, this.actorsHeight_);
+      var { rect, text } = this.drawActor(a, y + this.actorsHeight_ + this.signalsHeight_, this.actorsHeight_);
+      rect.attr('class', 'actor-box');
+      text.attr('class', 'actor-text');
 
       // Vertical line
       var aX = getCenterX(a);
@@ -1239,7 +1243,7 @@ _.extend(BaseTheme.prototype, {
   drawActor: function(actor, offsetY, height) {
     actor.y      = offsetY;
     actor.height = height;
-    this.drawTextBox(actor, actor.name, ACTOR_MARGIN, ACTOR_PADDING, this.font_, ALIGN_CENTER);
+    return this.drawTextBox(actor, actor.name, ACTOR_MARGIN, ACTOR_PADDING, this.font_, ALIGN_CENTER);
   },
 
   drawSignals: function(offsetY) {
