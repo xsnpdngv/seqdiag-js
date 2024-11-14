@@ -350,7 +350,7 @@ _.extend(BaseTheme.prototype, {
       var aX = getCenterX(a);
       this.drawLine(
        aX, y + this.actorsHeight_ - ACTOR_MARGIN,
-       aX, y + this.actorsHeight_ + ACTOR_MARGIN + this.signalsHeight_);
+       aX, y + this.actorsHeight_ + ACTOR_MARGIN + this.signalsHeight_).attr('class', 'actor-line');
     }, this));
   },
 
@@ -389,7 +389,7 @@ _.extend(BaseTheme.prototype, {
     var y2 = y1 + signal.height - 2 * SIGNAL_MARGIN - SIGNAL_PADDING;
 
     // Draw three lines, the last one with a arrow
-    this.drawLine(aX, y1, aX + SELF_SIGNAL_WIDTH, y1, signal.linetype).attr('class', 'signal');;
+    this.drawLine(aX, y1, aX + SELF_SIGNAL_WIDTH, y1, signal.linetype).attr('class', 'signal-arrow');
     this.drawLine(aX + SELF_SIGNAL_WIDTH, y1, aX + SELF_SIGNAL_WIDTH, y2, signal.linetype);
     this.drawLine(aX + SELF_SIGNAL_WIDTH, y2, aX, y2, signal.linetype, signal.arrowtype);
 
@@ -418,7 +418,7 @@ _.extend(BaseTheme.prototype, {
     // Padding above, between message and line
     // Margin below the line, between line and next signal
     y = offsetY + signal.height - SIGNAL_PADDING;
-    this.drawLine(aX, y, bX, y, signal.linetype, signal.arrowtype).attr('class', 'signal');
+    this.drawLine(aX, y, bX, y, signal.linetype, signal.arrowtype).attr('class', 'signal-arrow');
 
     // console.log("Additional Info:", signal.addinfo);
   },
@@ -447,7 +447,12 @@ _.extend(BaseTheme.prototype, {
     default:
       throw new Error('Unhandled note placement: ' + note.placement);
   }
-    return this.drawTextBox(note, note.message, NOTE_MARGIN, NOTE_PADDING, this.font_, ALIGN_LEFT);
+
+  var { rect, text } = this.drawTextBox(note, note.message, NOTE_MARGIN, NOTE_PADDING, this.font_, ALIGN_LEFT);
+  rect.attr('class', 'note-box');
+  text.attr('class', 'note-text');
+
+   return text;
   },
 
   /**
@@ -460,7 +465,7 @@ _.extend(BaseTheme.prototype, {
     var h = box.height - 2 * margin;
 
     // Draw inner box
-    this.drawRect(x, y, w, h);
+    var rect = this.drawRect(x, y, w, h);
 
     // Draw text (in the center)
     if (align == ALIGN_CENTER) {
@@ -471,6 +476,8 @@ _.extend(BaseTheme.prototype, {
       y += padding;
     }
 
-    return this.drawText(x, y, text, font, align);
+    var text = this.drawText(x, y, text, font, align);
+
+    return { rect, text };
   }
 });

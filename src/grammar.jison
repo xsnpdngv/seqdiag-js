@@ -38,7 +38,7 @@
 "-"               return 'LINE';
 ">>"              return 'OPENARROW';
 ">"               return 'ARROW';
-":"[^\r\n]+         return 'MESSAGE';
+":"[^\r\n]+       return 'MESSAGE';
 <<EOF>>           return 'EOF';
 .                 return 'INVALID';
 
@@ -70,8 +70,12 @@ statement
 	;
 
 note_statement
-	: 'note' placement actor message   { $$ = new Diagram.Note($3, $2, $4); }
-	| 'note' 'over' actor_pair message { $$ = new Diagram.Note($3, Diagram.PLACEMENT.OVER, $4); }
+	: 'note' placement actor message NL { $$ = new Diagram.Note($3, $2, $4, "", ""); }
+	| 'note' 'over' actor_pair message NL { $$ = new Diagram.Note($3, Diagram.PLACEMENT.OVER, $4, "", ""); }
+	| 'note' placement actor message NL tildebox addinfo { $$ = new Diagram.Note($3, $2, $4, "", $7); }
+	| 'note' 'over' actor_pair message NL tildebox addinfo { $$ = new Diagram.Note($3, Diagram.PLACEMENT.OVER, $4, "", $7); }
+	| 'note' placement actor message NL tildebox meta addinfo { $$ = new Diagram.Note($3, $2, $4, $7, $8); }
+	| 'note' 'over' actor_pair message NL tildebox meta addinfo { $$ = new Diagram.Note($3, Diagram.PLACEMENT.OVER, $4, $7, $8); }
 	;
 
 actor_pair
@@ -85,7 +89,7 @@ placement
 	;
 
 signal
-	: actor signaltype actor message { $$ = new Diagram.Signal($1, $2, $3, $4, "", ""); }
+	: actor signaltype actor message NL { $$ = new Diagram.Signal($1, $2, $3, $4, "", ""); }
 	| actor signaltype actor message NL tildebox addinfo { $$ = new Diagram.Signal($1, $2, $3, $4, "", $7 ); }
 	| actor signaltype actor message NL tildebox meta addinfo { $$ = new Diagram.Signal($1, $2, $3, $4, $7, $8 ); }
 	;

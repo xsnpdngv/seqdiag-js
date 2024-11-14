@@ -79,11 +79,13 @@ Diagram.Signal.prototype.isSelf = function() {
   return this.actorA.index == this.actorB.index;
 };
 
-Diagram.Note = function(actor, placement, message) {
+Diagram.Note = function(actor, placement, message, meta, addinfo) {
   this.type      = 'Note';
   this.actor     = actor;
   this.placement = placement;
   this.message   = message;
+  this.meta      = meta;
+  this.addinfo   = addinfo;
 
   if (this.hasManyActors() && actor[0] == actor[1]) {
     throw new Error('Note should be over two different actors');

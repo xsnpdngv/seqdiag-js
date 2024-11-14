@@ -89,11 +89,13 @@ Diagram.Signal.prototype.isSelf = function() {
   return this.actorA.index == this.actorB.index;
 };
 
-Diagram.Note = function(actor, placement, message) {
+Diagram.Note = function(actor, placement, message, meta, addinfo) {
   this.type      = 'Note';
   this.actor     = actor;
   this.placement = placement;
   this.message   = message;
+  this.meta      = meta;
+  this.addinfo   = addinfo;
 
   if (this.hasManyActors() && actor[0] == actor[1]) {
     throw new Error('Note should be over two different actors');
@@ -247,13 +249,13 @@ var parser = function() {
             actor: 17,
             over: 18,
             actor_pair: 19,
-            ",": 20,
-            left_of: 21,
-            right_of: 22,
-            signaltype: 23,
-            tildebox: 24,
-            addinfo: 25,
-            meta: 26,
+            tildebox: 20,
+            addinfo: 21,
+            meta: 22,
+            ",": 23,
+            left_of: 24,
+            right_of: 25,
+            signaltype: 26,
             ACTOR: 27,
             linetype: 28,
             arrowtype: 29,
@@ -273,12 +275,12 @@ var parser = function() {
             13: "title",
             15: "note",
             18: "over",
-            20: ",",
-            21: "left_of",
-            22: "right_of",
-            24: "tildebox",
-            25: "addinfo",
-            26: "meta",
+            20: "tildebox",
+            21: "addinfo",
+            22: "meta",
+            23: ",",
+            24: "left_of",
+            25: "right_of",
             27: "ACTOR",
             30: "LINE",
             31: "DOTLINE",
@@ -286,7 +288,7 @@ var parser = function() {
             33: "OPENARROW",
             34: "MESSAGE"
         },
-        productions_: [ 0, [ 3, 2 ], [ 4, 0 ], [ 4, 2 ], [ 6, 1 ], [ 6, 1 ], [ 7, 2 ], [ 7, 1 ], [ 7, 1 ], [ 7, 2 ], [ 12, 4 ], [ 12, 4 ], [ 19, 1 ], [ 19, 3 ], [ 16, 1 ], [ 16, 1 ], [ 11, 4 ], [ 11, 7 ], [ 11, 8 ], [ 17, 1 ], [ 10, 1 ], [ 23, 2 ], [ 23, 1 ], [ 28, 1 ], [ 28, 1 ], [ 29, 1 ], [ 29, 1 ], [ 14, 1 ] ],
+        productions_: [ 0, [ 3, 2 ], [ 4, 0 ], [ 4, 2 ], [ 6, 1 ], [ 6, 1 ], [ 7, 2 ], [ 7, 1 ], [ 7, 1 ], [ 7, 2 ], [ 12, 5 ], [ 12, 5 ], [ 12, 7 ], [ 12, 7 ], [ 12, 8 ], [ 12, 8 ], [ 19, 1 ], [ 19, 3 ], [ 16, 1 ], [ 16, 1 ], [ 11, 5 ], [ 11, 7 ], [ 11, 8 ], [ 17, 1 ], [ 10, 1 ], [ 26, 2 ], [ 26, 1 ], [ 28, 1 ], [ 28, 1 ], [ 29, 1 ], [ 29, 1 ], [ 14, 1 ] ],
         performAction: function(yytext, yyleng, yylineno, yy, yystate, $$, _$) {
             /* this == yyval */
             var $0 = $$.length - 1;
@@ -311,71 +313,87 @@ var parser = function() {
                 break;
 
               case 10:
-                this.$ = new Diagram.Note($$[$0 - 1], $$[$0 - 2], $$[$0]);
+                this.$ = new Diagram.Note($$[$0 - 2], $$[$0 - 3], $$[$0 - 1], "", "");
                 break;
 
               case 11:
-                this.$ = new Diagram.Note($$[$0 - 1], Diagram.PLACEMENT.OVER, $$[$0]);
+                this.$ = new Diagram.Note($$[$0 - 2], Diagram.PLACEMENT.OVER, $$[$0 - 1], "", "");
                 break;
 
               case 12:
-              case 22:
-                this.$ = $$[$0];
+                this.$ = new Diagram.Note($$[$0 - 4], $$[$0 - 5], $$[$0 - 3], "", $$[$0]);
                 break;
 
               case 13:
-                this.$ = [ $$[$0 - 2], $$[$0] ];
+                this.$ = new Diagram.Note($$[$0 - 4], Diagram.PLACEMENT.OVER, $$[$0 - 3], "", $$[$0]);
                 break;
 
               case 14:
-                this.$ = Diagram.PLACEMENT.LEFTOF;
+                this.$ = new Diagram.Note($$[$0 - 5], $$[$0 - 6], $$[$0 - 4], $$[$0 - 1], $$[$0]);
                 break;
 
               case 15:
-                this.$ = Diagram.PLACEMENT.RIGHTOF;
+                this.$ = new Diagram.Note($$[$0 - 5], Diagram.PLACEMENT.OVER, $$[$0 - 4], $$[$0 - 1], $$[$0]);
                 break;
 
               case 16:
-                this.$ = new Diagram.Signal($$[$0 - 3], $$[$0 - 2], $$[$0 - 1], $$[$0], "", "");
+              case 26:
+                this.$ = $$[$0];
                 break;
 
               case 17:
-                this.$ = new Diagram.Signal($$[$0 - 6], $$[$0 - 5], $$[$0 - 4], $$[$0 - 3], "", $$[$0]);
+                this.$ = [ $$[$0 - 2], $$[$0] ];
                 break;
 
               case 18:
-                this.$ = new Diagram.Signal($$[$0 - 7], $$[$0 - 6], $$[$0 - 5], $$[$0 - 4], $$[$0 - 1], $$[$0]);
+                this.$ = Diagram.PLACEMENT.LEFTOF;
                 break;
 
               case 19:
-                this.$ = yy.parser.yy.getActor(Diagram.unescape($$[$0]));
+                this.$ = Diagram.PLACEMENT.RIGHTOF;
                 break;
 
               case 20:
-                this.$ = yy.parser.yy.getActorWithAlias(Diagram.unescape($$[$0]));
+                this.$ = new Diagram.Signal($$[$0 - 4], $$[$0 - 3], $$[$0 - 2], $$[$0 - 1], "", "");
                 break;
 
               case 21:
-                this.$ = $$[$0 - 1] | $$[$0] << 2;
+                this.$ = new Diagram.Signal($$[$0 - 6], $$[$0 - 5], $$[$0 - 4], $$[$0 - 3], "", $$[$0]);
+                break;
+
+              case 22:
+                this.$ = new Diagram.Signal($$[$0 - 7], $$[$0 - 6], $$[$0 - 5], $$[$0 - 4], $$[$0 - 1], $$[$0]);
                 break;
 
               case 23:
-                this.$ = Diagram.LINETYPE.SOLID;
+                this.$ = yy.parser.yy.getActor(Diagram.unescape($$[$0]));
                 break;
 
               case 24:
-                this.$ = Diagram.LINETYPE.DOTTED;
+                this.$ = yy.parser.yy.getActorWithAlias(Diagram.unescape($$[$0]));
                 break;
 
               case 25:
-                this.$ = Diagram.ARROWTYPE.FILLED;
-                break;
-
-              case 26:
-                this.$ = Diagram.ARROWTYPE.OPEN;
+                this.$ = $$[$0 - 1] | $$[$0] << 2;
                 break;
 
               case 27:
+                this.$ = Diagram.LINETYPE.SOLID;
+                break;
+
+              case 28:
+                this.$ = Diagram.LINETYPE.DOTTED;
+                break;
+
+              case 29:
+                this.$ = Diagram.ARROWTYPE.FILLED;
+                break;
+
+              case 30:
+                this.$ = Diagram.ARROWTYPE.OPEN;
+                break;
+
+              case 31:
                 this.$ = Diagram.unescape($$[$0].substring(1));
             }
         },
@@ -405,24 +423,24 @@ var parser = function() {
             14: 16,
             34: $V2
         }, {
-            23: 18,
+            26: 18,
             28: 19,
             30: [ 1, 20 ],
             31: [ 1, 21 ]
         }, {
             16: 22,
             18: [ 1, 23 ],
-            21: [ 1, 24 ],
-            22: [ 1, 25 ]
-        }, o([ 20, 30, 31, 34 ], [ 2, 19 ]), o($V0, [ 2, 6 ]), o($V0, [ 2, 20 ]), o($V0, [ 2, 9 ]), o($V0, [ 2, 27 ]), {
+            24: [ 1, 24 ],
+            25: [ 1, 25 ]
+        }, o([ 23, 30, 31, 34 ], [ 2, 23 ]), o($V0, [ 2, 6 ]), o($V0, [ 2, 24 ]), o($V0, [ 2, 9 ]), o($V0, [ 2, 31 ]), {
             17: 26,
             27: $V1
         }, {
-            27: [ 2, 22 ],
+            27: [ 2, 26 ],
             29: 27,
             32: [ 1, 28 ],
             33: [ 1, 29 ]
-        }, o($V3, [ 2, 23 ]), o($V3, [ 2, 24 ]), {
+        }, o($V3, [ 2, 27 ]), o($V3, [ 2, 28 ]), {
             17: 30,
             27: $V1
         }, {
@@ -430,18 +448,18 @@ var parser = function() {
             19: 31,
             27: $V1
         }, {
-            27: [ 2, 14 ]
+            27: [ 2, 18 ]
         }, {
-            27: [ 2, 15 ]
+            27: [ 2, 19 ]
         }, {
             14: 33,
             34: $V2
         }, {
-            27: [ 2, 21 ]
-        }, {
             27: [ 2, 25 ]
         }, {
-            27: [ 2, 26 ]
+            27: [ 2, 29 ]
+        }, {
+            27: [ 2, 30 ]
         }, {
             14: 34,
             34: $V2
@@ -449,31 +467,49 @@ var parser = function() {
             14: 35,
             34: $V2
         }, {
-            20: [ 1, 36 ],
-            34: [ 2, 12 ]
-        }, o([ 5, 9, 13, 15, 27 ], [ 2, 16 ], {
+            23: [ 1, 36 ],
+            34: [ 2, 16 ]
+        }, {
             8: [ 1, 37 ]
-        }), o($V0, [ 2, 10 ]), o($V0, [ 2, 11 ]), {
-            17: 38,
+        }, {
+            8: [ 1, 38 ]
+        }, {
+            8: [ 1, 39 ]
+        }, {
+            17: 40,
             27: $V1
+        }, o($V0, [ 2, 20 ], {
+            20: [ 1, 41 ]
+        }), o($V0, [ 2, 10 ], {
+            20: [ 1, 42 ]
+        }), o($V0, [ 2, 11 ], {
+            20: [ 1, 43 ]
+        }), {
+            34: [ 2, 17 ]
         }, {
-            24: [ 1, 39 ]
+            21: [ 1, 44 ],
+            22: [ 1, 45 ]
         }, {
-            34: [ 2, 13 ]
+            21: [ 1, 46 ],
+            22: [ 1, 47 ]
         }, {
-            25: [ 1, 40 ],
-            26: [ 1, 41 ]
-        }, o($V0, [ 2, 17 ]), {
-            25: [ 1, 42 ]
-        }, o($V0, [ 2, 18 ]) ],
+            21: [ 1, 48 ],
+            22: [ 1, 49 ]
+        }, o($V0, [ 2, 21 ]), {
+            21: [ 1, 50 ]
+        }, o($V0, [ 2, 12 ]), {
+            21: [ 1, 51 ]
+        }, o($V0, [ 2, 13 ]), {
+            21: [ 1, 52 ]
+        }, o($V0, [ 2, 22 ]), o($V0, [ 2, 14 ]), o($V0, [ 2, 15 ]) ],
         defaultActions: {
             3: [ 2, 1 ],
-            24: [ 2, 14 ],
-            25: [ 2, 15 ],
-            27: [ 2, 21 ],
-            28: [ 2, 25 ],
-            29: [ 2, 26 ],
-            38: [ 2, 13 ]
+            24: [ 2, 18 ],
+            25: [ 2, 19 ],
+            27: [ 2, 25 ],
+            28: [ 2, 29 ],
+            29: [ 2, 30 ],
+            40: [ 2, 17 ]
         },
         parseError: function(str, hash) {
             if (!hash.recoverable) throw new Error(str);
@@ -714,17 +750,17 @@ var parser = function() {
             performAction: function(yy, yy_, $avoiding_name_collisions, YY_START) {
                 switch ($avoiding_name_collisions) {
                   case 0:
-                    return this.begin("tildebox"), 24;
+                    return this.begin("tildebox"), 20;
 
                   case 1:
                     this.popState();
                     break;
 
                   case 2:
-                    return 26;
+                    return 22;
 
                   case 3:
-                    return 25;
+                    return 21;
 
                   case 4:
                     return 8;
@@ -738,10 +774,10 @@ var parser = function() {
                     return 9;
 
                   case 8:
-                    return 21;
+                    return 24;
 
                   case 9:
-                    return 22;
+                    return 25;
 
                   case 10:
                     return 18;
@@ -756,7 +792,7 @@ var parser = function() {
                     return this.popState(), 34;
 
                   case 14:
-                    return 20;
+                    return 23;
 
                   case 15:
                   case 16:
@@ -1196,7 +1232,7 @@ _.extend(BaseTheme.prototype, {
       var aX = getCenterX(a);
       this.drawLine(
        aX, y + this.actorsHeight_ - ACTOR_MARGIN,
-       aX, y + this.actorsHeight_ + ACTOR_MARGIN + this.signalsHeight_);
+       aX, y + this.actorsHeight_ + ACTOR_MARGIN + this.signalsHeight_).attr('class', 'actor-line');
     }, this));
   },
 
@@ -1235,7 +1271,7 @@ _.extend(BaseTheme.prototype, {
     var y2 = y1 + signal.height - 2 * SIGNAL_MARGIN - SIGNAL_PADDING;
 
     // Draw three lines, the last one with a arrow
-    this.drawLine(aX, y1, aX + SELF_SIGNAL_WIDTH, y1, signal.linetype).attr('class', 'signal');;
+    this.drawLine(aX, y1, aX + SELF_SIGNAL_WIDTH, y1, signal.linetype).attr('class', 'signal-arrow');
     this.drawLine(aX + SELF_SIGNAL_WIDTH, y1, aX + SELF_SIGNAL_WIDTH, y2, signal.linetype);
     this.drawLine(aX + SELF_SIGNAL_WIDTH, y2, aX, y2, signal.linetype, signal.arrowtype);
 
@@ -1264,7 +1300,7 @@ _.extend(BaseTheme.prototype, {
     // Padding above, between message and line
     // Margin below the line, between line and next signal
     y = offsetY + signal.height - SIGNAL_PADDING;
-    this.drawLine(aX, y, bX, y, signal.linetype, signal.arrowtype).attr('class', 'signal');
+    this.drawLine(aX, y, bX, y, signal.linetype, signal.arrowtype).attr('class', 'signal-arrow');
 
     // console.log("Additional Info:", signal.addinfo);
   },
@@ -1293,7 +1329,12 @@ _.extend(BaseTheme.prototype, {
     default:
       throw new Error('Unhandled note placement: ' + note.placement);
   }
-    return this.drawTextBox(note, note.message, NOTE_MARGIN, NOTE_PADDING, this.font_, ALIGN_LEFT);
+
+  var { rect, text } = this.drawTextBox(note, note.message, NOTE_MARGIN, NOTE_PADDING, this.font_, ALIGN_LEFT);
+  rect.attr('class', 'note-box');
+  text.attr('class', 'note-text');
+
+   return text;
   },
 
   /**
@@ -1306,7 +1347,7 @@ _.extend(BaseTheme.prototype, {
     var h = box.height - 2 * margin;
 
     // Draw inner box
-    this.drawRect(x, y, w, h);
+    var rect = this.drawRect(x, y, w, h);
 
     // Draw text (in the center)
     if (align == ALIGN_CENTER) {
@@ -1317,7 +1358,9 @@ _.extend(BaseTheme.prototype, {
       y += padding;
     }
 
-    return this.drawText(x, y, text, font, align);
+    var text = this.drawText(x, y, text, font, align);
+
+    return { rect, text };
   }
 });
 
