@@ -342,12 +342,12 @@ _.extend(BaseTheme.prototype, {
     _.each(this.diagram.actors, _.bind(function(a) {
       // Top box
       var { rect, text } = this.drawActor(a, y, this.actorsHeight_);
-      rect.attr('class', 'actor-box');
+      rect.attr('class', 'actor-box actor-top-box');
       text.attr('class', 'actor-text');
 
       // Bottom box
       var { rect, text } = this.drawActor(a, y + this.actorsHeight_ + this.signalsHeight_, this.actorsHeight_);
-      rect.attr('class', 'actor-box');
+      rect.attr('class', 'actor-box actor-bottom-box');
       text.attr('class', 'actor-text');
 
       // Vertical line
