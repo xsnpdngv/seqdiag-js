@@ -19,6 +19,7 @@ function Diagram() {
   this.title   = undefined;
   this.actors  = [];
   this.signals = [];
+  this.signalCount = 0;
 }
 /*
  * Return an existing actor with this alias, or creates a new one with alias and name.
@@ -65,6 +66,7 @@ Diagram.prototype.setAddInfo = function(add_info) {
 };
 
 Diagram.prototype.addSignal = function(signal) {
+  signal.seqNum = ++this.signalCount;
   this.signals.push(signal);
 };
 
@@ -1224,12 +1226,12 @@ _.extend(BaseTheme.prototype, {
     _.each(this.diagram.actors, _.bind(function(a) {
       // Top box
       var { rect, text } = this.drawActor(a, y, this.actorsHeight_);
-      rect.attr('class', 'actor-box');
+      rect.attr('class', 'actor-box actor-top-box');
       text.attr('class', 'actor-text');
 
       // Bottom box
       var { rect, text } = this.drawActor(a, y + this.actorsHeight_ + this.signalsHeight_, this.actorsHeight_);
-      rect.attr('class', 'actor-box');
+      rect.attr('class', 'actor-box actor-bottom-box');
       text.attr('class', 'actor-text');
 
       // Vertical line
