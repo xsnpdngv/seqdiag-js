@@ -87,6 +87,10 @@ Diagram.Signal = function(actorA, signaltype, actorB, message, meta, addinfo) {
   this.message    = message.trim();
   this.meta       = meta.trim();
   this.addinfo    = addinfo.trim();
+  this.addinfoHead= {};
+  try {
+      this.addinfoHead = JSON.parse(this.meta);
+  } catch (e) { }
 };
 
 Diagram.Signal.prototype.isSelf = function() {
@@ -97,9 +101,13 @@ Diagram.Note = function(actor, placement, message, meta, addinfo) {
   this.type      = 'Note';
   this.actor     = actor;
   this.placement = placement;
-  this.message   = message;
-  this.meta      = meta;
-  this.addinfo   = addinfo;
+  this.message   = message.trim();
+  this.meta      = meta.trim();
+  this.addinfo   = addinfo.trim();
+  this.addinfoHead= {};
+  try {
+      this.addinfoHead = JSON.parse(this.meta);
+  } catch (e) { }
 
   if (this.hasManyActors() && actor[0] == actor[1]) {
     throw new Error('Note should be over two different actors');
