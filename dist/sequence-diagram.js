@@ -66,7 +66,9 @@ Diagram.prototype.setAddInfo = function(add_info) {
 };
 
 Diagram.prototype.addSignal = function(signal) {
-  signal.seqNum = ++this.signalCount;
+  if (signal.type === 'Signal') {
+    signal.seqNum = ++this.signalCount;
+  }
   this.signals.push(signal);
 };
 
