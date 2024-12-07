@@ -51,10 +51,6 @@ Diagram.prototype.setTitle = function(title) {
   this.title = title;
 };
 
-Diagram.prototype.setAddInfo = function(add_info) {
-  this.add_info = add_info;
-};
-
 Diagram.prototype.addSignal = function(signal) {
   if (signal.type === 'Signal') {
     signal.seqNum = ++this.signalCount;
