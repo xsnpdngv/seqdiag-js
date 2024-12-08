@@ -1061,7 +1061,10 @@ _.extend(BaseTheme.prototype, {
 
     this.drawTitle();
     this.drawActors(y);
-    this.drawSignals(y + this.actorsHeight_);
+
+    this.drawSignals(y + this.actorsHeight_, () => {
+        container.dispatchEvent(new CustomEvent("drawComplete"));
+    });
   },
 
   layout: function() {
@@ -1254,23 +1257,42 @@ _.extend(BaseTheme.prototype, {
     return this.drawTextBox(actor, actor.name, ACTOR_MARGIN, ACTOR_PADDING, this.font_, ALIGN_CENTER);
   },
 
-  drawSignals: function(offsetY) {
-    var y = offsetY;
-    _.each(this.diagram.signals, _.bind(function(s) {
-      // TODO Add debug mode, that draws padding/margin box
-      if (s.type == 'Signal') {
-        if (s.isSelf()) {
-          this.drawSelfSignal(s, y);
-        } else {
-          this.drawSignal(s, y);
+  drawSignals: function(offsetY, onComplete) {
+    const signals = this.diagram.signals;
+    const chunkSize = 250;
+    let currentIndex = 0;
+    let y = offsetY;
+
+    const processChunk = () => {
+        const endIndex = Math.min(currentIndex + chunkSize, signals.length);
+
+        for (let i = currentIndex; i < endIndex; i++) {
+            const s = signals[i];
+            if (s.type === 'Signal') {
+                if (s.isSelf()) {
+                    this.drawSelfSignal(s, y);
+                } else {
+                    this.drawSignal(s, y);
+                }
+            } else if (s.type === 'Note') {
+                this.drawNote(s, y);
+            }
+            y += s.height;
         }
 
-      } else if (s.type == 'Note') {
-        this.drawNote(s, y);
-      }
+        currentIndex = endIndex;
 
-      y += s.height;
-    }, this));
+        if (currentIndex < signals.length) {
+            // Schedule the next chunk to allow browser rendering
+            setTimeout(processChunk, 0); // Or use requestAnimationFrame(processChunk);
+        } else {
+            if (onComplete) {
+              onComplete(); // Indicate that drawing is complete
+            }
+        }
+    };
+
+    processChunk(); // Start processing the first chunk
   },
 
   drawSelfSignal: function(signal, offsetY) {
