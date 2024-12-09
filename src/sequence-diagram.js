@@ -45,3 +45,11 @@ Diagram.prototype.drawSVG = function(container, options) {
       drawing.draw(div);
     });
 }; // end of drawSVG
+
+
+Diagram.prototype.drawHeader = function(container) {
+  var Theme = Diagram.themes['simple'];
+  new Theme(this, {}, function(drawing) {
+      drawing.drawHeader(container);
+    });
+};

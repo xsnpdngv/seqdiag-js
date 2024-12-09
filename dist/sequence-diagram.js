@@ -1230,6 +1230,17 @@ _.extend(BaseTheme.prototype, {
     }
   },
 
+  drawHeader: function(container) {
+    this.setupPaper(container);
+    this.layout();
+    _.each(this.diagram.actors, _.bind(function(a) {
+      // Top box
+      var { rect, text } = this.drawActor(a, DIAGRAM_MARGIN, this.actorsHeight_);
+      rect.attr('class', 'head-actor-box');
+      text.attr('class', 'head-actor-text');
+    }, this));
+  },
+
   drawActors: function(offsetY) {
     var y = offsetY;
     _.each(this.diagram.actors, _.bind(function(a) {
@@ -1259,7 +1270,7 @@ _.extend(BaseTheme.prototype, {
 
   drawSignals: function(offsetY, onComplete) {
     const signals = this.diagram.signals;
-    const chunkSize = 250;
+    const chunkSize = 200;
     let currentIndex = 0;
     let y = offsetY;
 
@@ -2836,6 +2847,14 @@ Diagram.prototype.drawSVG = function(container, options) {
       drawing.draw(div);
     });
 }; // end of drawSVG
+
+
+Diagram.prototype.drawHeader = function(container) {
+  var Theme = Diagram.themes['simple'];
+  new Theme(this, {}, function(drawing) {
+      drawing.drawHeader(container);
+    });
+};
 /** js sequence diagrams
  *  https://bramp.github.io/js-sequence-diagrams/
  *  (c) 2012-2017 Andrew Brampton (bramp.net)

@@ -340,6 +340,17 @@ _.extend(BaseTheme.prototype, {
     }
   },
 
+  drawHeader: function(container) {
+    this.setupPaper(container);
+    this.layout();
+    _.each(this.diagram.actors, _.bind(function(a) {
+      // Top box
+      var { rect, text } = this.drawActor(a, DIAGRAM_MARGIN, this.actorsHeight_);
+      rect.attr('class', 'head-actor-box');
+      text.attr('class', 'head-actor-text');
+    }, this));
+  },
+
   drawActors: function(offsetY) {
     var y = offsetY;
     _.each(this.diagram.actors, _.bind(function(a) {
@@ -369,7 +380,7 @@ _.extend(BaseTheme.prototype, {
 
   drawSignals: function(offsetY, onComplete) {
     const signals = this.diagram.signals;
-    const chunkSize = 250;
+    const chunkSize = 200;
     let currentIndex = 0;
     let y = offsetY;
 
