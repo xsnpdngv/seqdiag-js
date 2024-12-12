@@ -380,7 +380,7 @@ _.extend(BaseTheme.prototype, {
 
   drawSignals: function(offsetY, onComplete) {
     const signals = this.diagram.signals;
-    const chunkSize = 200;
+    const chunkSize = 256;
     let currentIndex = 0;
     let y = offsetY;
 
