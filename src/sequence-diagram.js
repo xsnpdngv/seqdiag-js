@@ -53,3 +53,8 @@ Diagram.prototype.drawHeader = function(container) {
       drawing.drawHeader(container);
     });
 };
+
+
+Diagram.prototype.setOffsetX = function(offsetX) {
+  X_OFFSET = offsetX;
+};

@@ -17,6 +17,7 @@
 // Title box could look better
 // Note box could look better
 
+var X_OFFSET = 0;
 var DIAGRAM_MARGIN = 10;
 
 var ACTOR_MARGIN   = 10; // Margin around a actor
@@ -184,7 +185,7 @@ _.extend(BaseTheme.prototype, {
     var actors  = diagram.actors;
     var signals = diagram.signals;
 
-    diagram.width  = 0; // min width
+    diagram.width  = X_OFFSET; // min width
     diagram.height = 0; // min height
 
     // Setup some layout stuff
@@ -323,7 +324,7 @@ _.extend(BaseTheme.prototype, {
     diagram.width = Math.max(actorsX, diagram.width);
 
     // TODO Refactor a little
-    diagram.width  += 2 * DIAGRAM_MARGIN;
+    diagram.width  += X_OFFSET + 2 * DIAGRAM_MARGIN;
     diagram.height += 2 * DIAGRAM_MARGIN + 2 * this.actorsHeight_ + this.signalsHeight_;
 
     return this;
@@ -365,7 +366,7 @@ _.extend(BaseTheme.prototype, {
       text.attr('class', 'actor-text');
 
       // Vertical line
-      var aX = getCenterX(a);
+      var aX = X_OFFSET + getCenterX(a);
       this.drawLine(
        aX, y + this.actorsHeight_ - ACTOR_MARGIN,
        aX, y + this.actorsHeight_ + ACTOR_MARGIN + this.signalsHeight_).attr('class', 'actor-line');
@@ -420,7 +421,7 @@ _.extend(BaseTheme.prototype, {
     assert(signal.isSelf(), 'signal must be a self signal');
 
     var textBB = signal.textBB;
-    var aX = getCenterX(signal.actorA);
+    var aX = X_OFFSET + getCenterX(signal.actorA);
 
     var y1 = offsetY + SIGNAL_MARGIN + SIGNAL_PADDING;
     var y2 = y1 + signal.height - 2 * SIGNAL_MARGIN - SIGNAL_PADDING;
@@ -441,8 +442,8 @@ _.extend(BaseTheme.prototype, {
   },
 
   drawSignal: function(signal, offsetY) {
-    var aX = getCenterX(signal.actorA);
-    var bX = getCenterX(signal.actorB);
+    var aX = X_OFFSET + getCenterX(signal.actorA);
+    var bX = X_OFFSET + getCenterX(signal.actorB);
 
     // Mid point between actors
     var x = (bX - aX) / 2 + aX;
@@ -496,7 +497,7 @@ _.extend(BaseTheme.prototype, {
    * Draw text surrounded by a box
    */
   drawTextBox: function(box, text, margin, padding, font, align) {
-    var x = box.x + margin;
+    var x = X_OFFSET + box.x + margin;
     var y = box.y + margin;
     var w = box.width  - 2 * margin;
     var h = box.height - 2 * margin;
@@ -506,7 +507,7 @@ _.extend(BaseTheme.prototype, {
 
     // Draw text (in the center)
     if (align == ALIGN_CENTER) {
-      x = getCenterX(box);
+      x = X_OFFSET + getCenterX(box);
       y = getCenterY(box);
     } else {
       x += padding;
