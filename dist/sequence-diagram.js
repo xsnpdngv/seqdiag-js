@@ -1237,8 +1237,8 @@ _.extend(BaseTheme.prototype, {
     _.each(this.diagram.actors, _.bind(function(a) {
       // Top box
       var { rect, text } = this.drawActor(a, DIAGRAM_MARGIN, this.actorsHeight_);
-      rect.attr('class', 'head-actor-box');
-      text.attr('class', 'head-actor-text');
+      rect.attr('class', 'head-actor');
+      text.attr('class', 'head-actor');
     }, this));
   },
 
@@ -1247,19 +1247,19 @@ _.extend(BaseTheme.prototype, {
     _.each(this.diagram.actors, _.bind(function(a) {
       // Top box
       var { rect, text } = this.drawActor(a, y, this.actorsHeight_);
-      rect.attr('class', 'actor-box actor-top-box');
-      text.attr('class', 'actor-text');
+      rect.attr('class', 'actor top');
+      text.attr('class', 'actor');
 
       // Bottom box
       var { rect, text } = this.drawActor(a, y + this.actorsHeight_ + this.signalsHeight_, this.actorsHeight_);
-      rect.attr('class', 'actor-box actor-bottom-box');
-      text.attr('class', 'actor-text');
+      rect.attr('class', 'actor bottom');
+      text.attr('class', 'actor');
 
       // Vertical line
       var aX = X_OFFSET + getCenterX(a);
       this.drawLine(
        aX, y + this.actorsHeight_ - ACTOR_MARGIN,
-       aX, y + this.actorsHeight_ + ACTOR_MARGIN + this.signalsHeight_).attr('class', 'actor-line');
+       aX, y + this.actorsHeight_ + ACTOR_MARGIN + this.signalsHeight_).attr('class', 'actor');
     }, this));
   },
 
@@ -1317,7 +1317,7 @@ _.extend(BaseTheme.prototype, {
     var y2 = y1 + signal.height - 2 * SIGNAL_MARGIN - SIGNAL_PADDING;
 
     // Draw three lines, the last one with a arrow
-    this.drawLine(aX, y1, aX + SELF_SIGNAL_WIDTH, y1, signal.linetype).attr('class', 'signal-arrow');
+    this.drawLine(aX, y1, aX + SELF_SIGNAL_WIDTH, y1, signal.linetype).attr('class', 'signal');
     this.drawLine(aX + SELF_SIGNAL_WIDTH, y1, aX + SELF_SIGNAL_WIDTH, y2, signal.linetype);
     this.drawLine(aX + SELF_SIGNAL_WIDTH, y2, aX, y2, signal.linetype, signal.arrowtype);
 
@@ -1346,7 +1346,7 @@ _.extend(BaseTheme.prototype, {
     // Padding above, between message and line
     // Margin below the line, between line and next signal
     y = offsetY + signal.height - SIGNAL_PADDING;
-    this.drawLine(aX, y, bX, y, signal.linetype, signal.arrowtype).attr('class', 'signal-arrow');
+    this.drawLine(aX, y, bX, y, signal.linetype, signal.arrowtype).attr('class', 'signal');
 
     // console.log("Additional Info:", signal.addinfo);
   },
@@ -1377,8 +1377,8 @@ _.extend(BaseTheme.prototype, {
   }
 
   var { rect, text } = this.drawTextBox(note, note.message, NOTE_MARGIN, NOTE_PADDING, this.font_, ALIGN_LEFT);
-  rect.attr('class', 'note-box');
-  text.attr('class', 'note-text');
+  rect.attr('class', 'note');
+  text.attr('class', 'note');
 
    return text;
   },
