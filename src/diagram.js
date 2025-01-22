@@ -10,6 +10,7 @@ function Diagram() {
   this.actors  = [];
   this.signals = [];
   this.signalCount = 0;
+  this.netSignalCount = 0;
 }
 
 Diagram.prototype.clone = function() {
@@ -17,6 +18,8 @@ Diagram.prototype.clone = function() {
 
   clone.title = this.title;
   clone.signalCount = this.signalCount;
+  clone.netSignalCount = this.netSignalCount;
+  // clone.netSignalCount = clone.signals.filter(s => s.type === 'Signal').length;
 
   clone.actors = this.actors.map(actor => new Diagram.Actor(actor.alias, actor.name, actor.index));
 
@@ -90,7 +93,7 @@ Diagram.prototype.setTitle = function(title) {
 
 Diagram.prototype.addSignal = function(signal) {
   if (signal.type === 'Signal') {
-    signal.seqNum = ++this.signalCount;
+    signal.seqNum = this.netSignalCount = ++this.signalCount;
   }
   this.signals.push(signal);
 };
