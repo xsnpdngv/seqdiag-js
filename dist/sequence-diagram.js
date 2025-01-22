@@ -31,16 +31,27 @@ Diagram.prototype.clone = function() {
   clone.actors = this.actors.map(actor => new Diagram.Actor(actor.alias, actor.name, actor.index));
 
   clone.signals = this.signals.map(signal => {
-    let clonedSignal = new Diagram.Signal(
-      clone.actors[signal.actorA.index], 
-      signal.linetype, 
-      clone.actors[signal.actorB.index], 
-      signal.message, 
-      signal.meta, 
-      signal.addinfo
-    );
+    let clonedSignal;
+    if (signal.type === 'Signal') {
+      clonedSignal = new Diagram.Signal(
+        clone.actors[signal.actorA.index], 
+        signal.linetype, 
+        clone.actors[signal.actorB.index], 
+        signal.message, 
+        signal.meta, 
+        signal.addinfo
+      );
+      clonedSignal.seqNum = signal.seqNum;
+    } else if (signal.type === 'Note') {
+      clonedSignal = new Diagram.Note(
+        clone.actors[signal.actor.index],
+        signal.placement,
+        signal.message,
+        signal.meta,
+        signal.addinfo
+      );
+    }
     clonedSignal.addinfoHead = JSON.parse(JSON.stringify(signal.addinfoHead));
-    clonedSignal.seqNum = signal.seqNum;
     return clonedSignal;
   });
 
