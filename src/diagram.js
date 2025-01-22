@@ -11,6 +11,32 @@ function Diagram() {
   this.signals = [];
   this.signalCount = 0;
 }
+
+Diagram.prototype.clone = function() {
+  const clone = new Diagram();
+
+  clone.title = this.title;
+  clone.signalCount = this.signalCount;
+
+  clone.actors = this.actors.map(actor => new Diagram.Actor(actor.alias, actor.name, actor.index));
+
+  clone.signals = this.signals.map(signal => {
+    let clonedSignal = new Diagram.Signal(
+      clone.actors[signal.actorA.index], 
+      signal.linetype, 
+      clone.actors[signal.actorB.index], 
+      signal.message, 
+      signal.meta, 
+      signal.addinfo
+    );
+    clonedSignal.addinfoHead = JSON.parse(JSON.stringify(signal.addinfoHead));
+    clonedSignal.seqNum = signal.seqNum;
+    return clonedSignal;
+  });
+
+  return clone;
+};
+
 /*
  * Return an existing actor with this alias, or creates a new one with alias and name.
  */
@@ -176,4 +202,3 @@ Diagram.parse = function(input) {
   delete diagram.parseError;
   return diagram;
 };
-
