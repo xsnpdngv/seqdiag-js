@@ -957,6 +957,8 @@ var TITLE_MARGIN   = 0;
 var TITLE_PADDING  = 5;
 
 var SELF_SIGNAL_WIDTH = 20; // How far out a self signal goes
+var MIN_SIGNAL_WIDTH = 180;
+var SIGNAL_TEXT_PADDING = 15;
 
 var PLACEMENT = Diagram.PLACEMENT;
 var LINETYPE  = Diagram.LINETYPE;
@@ -1153,7 +1155,7 @@ _.extend(BaseTheme.prototype, {
         a.paddingRight = Math.max(d, a.paddingRight);
       } else {
         a = actors[a];
-        a.distances[b] = Math.max(d, a.distances[b] ? a.distances[b] : 0);
+        a.distances[b] = Math.max(MIN_SIGNAL_WIDTH, d, a.distances[b] ? a.distances[b] : 0);
       }
     }
 
@@ -1172,7 +1174,7 @@ _.extend(BaseTheme.prototype, {
 
       if (s.type == 'Signal') {
 
-        s.width  += (SIGNAL_MARGIN + SIGNAL_PADDING) * 2;
+        s.width  += (SIGNAL_MARGIN + SIGNAL_TEXT_PADDING + SIGNAL_PADDING) * 2;
         s.height += (SIGNAL_MARGIN + SIGNAL_PADDING) * 2;
 
         if (s.isSelf()) {
