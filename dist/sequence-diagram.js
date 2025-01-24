@@ -32,9 +32,9 @@ Diagram.prototype.clone = function() {
 
   clone.actors = this.actors.map(actor => new Diagram.Actor(actor.alias, actor.name, actor.index));
 
+  let clonedSignal;
   clone.signals = this.signals.map(signal => {
-    let clonedSignal;
-    if (signal.type === 'Signal') {
+    if (signal.type[0] === 'S') {
       clonedSignal = new Diagram.Signal(
         clone.actors[signal.actorA.index], 
         signal.linetype | (signal.arrowtype << 2),
@@ -44,7 +44,7 @@ Diagram.prototype.clone = function() {
         signal.addinfo
       );
       clonedSignal.seqNum = signal.seqNum;
-    } else if (signal.type === 'Note') {
+    } else /* if (signal.type[0] === 'N') */ {
       clonedSignal = new Diagram.Note(
         clone.actors[signal.actor.index],
         signal.placement,
@@ -53,7 +53,6 @@ Diagram.prototype.clone = function() {
         signal.addinfo
       );
     }
-    clonedSignal.addinfoHead = JSON.parse(JSON.stringify(signal.addinfoHead));
     return clonedSignal;
   });
 
@@ -122,10 +121,8 @@ Diagram.Signal = function(actorA, signaltype, actorB, message, meta, addinfo) {
   this.message    = message.trim();
   this.meta       = meta.trim();
   this.addinfo    = addinfo.trim();
-  this.addinfoHead= {};
-  try {
-      this.addinfoHead = JSON.parse(this.meta);
-  } catch (e) { }
+  try { this.addinfoHead = JSON.parse(this.meta); }
+  catch (e) { this.addinfoHead = {}; }
 };
 
 Diagram.Signal.prototype.isSelf = function() {
@@ -139,10 +136,8 @@ Diagram.Note = function(actor, placement, message, meta, addinfo) {
   this.message   = message.trim();
   this.meta      = meta.trim();
   this.addinfo   = addinfo.trim();
-  this.addinfoHead= {};
-  try {
-      this.addinfoHead = JSON.parse(this.meta);
-  } catch (e) { }
+  try { this.addinfoHead = JSON.parse(this.meta); }
+  catch (e) { this.addinfoHead= {}; }
 
   if (this.hasManyActors() && actor[0] == actor[1]) {
     throw new Error('Note should be over two different actors');
