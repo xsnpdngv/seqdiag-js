@@ -29,7 +29,6 @@ Diagram.prototype.clone = function() {
   clone.title = this.title;
   clone.signalCount = this.signalCount;
   clone.netSignalCount = this.netSignalCount;
-  // clone.netSignalCount = clone.signals.filter(s => s.type === 'Signal').length;
 
   clone.actors = this.actors.map(actor => new Diagram.Actor(actor.alias, actor.name, actor.index));
 
@@ -38,7 +37,7 @@ Diagram.prototype.clone = function() {
     if (signal.type === 'Signal') {
       clonedSignal = new Diagram.Signal(
         clone.actors[signal.actorA.index], 
-        signal.linetype, 
+        signal.linetype | (signal.arrowtype << 2),
         clone.actors[signal.actorB.index], 
         signal.message, 
         signal.meta, 
@@ -1310,7 +1309,7 @@ _.extend(BaseTheme.prototype, {
 
   drawSignals: function(offsetY, onComplete) {
     const signals = this.diagram.signals;
-    const chunkSize = 1024;
+    const chunkSize = 256;
     let currentIndex = 0;
     let y = offsetY;
 
