@@ -1268,7 +1268,10 @@ _.extend(BaseTheme.prototype, {
 
   drawHeader: function(container) {
     this.setupPaper(container);
-    this.layout();
+    // instead of this.layout(); if the diagram is drawn previously, it is enough, and much faster:
+    this.paper_.setSize(this.diagram.width, this.diagram.height);
+    this.diagram.actors.forEach(a => { this.actorsHeight_ = Math.max(a.height, this.actorsHeight_); });
+    // ----
     _.each(this.diagram.actors, _.bind(function(a) {
       // Top box
       var { rect, text } = this.drawActor(a, DIAGRAM_MARGIN, this.actorsHeight_);
