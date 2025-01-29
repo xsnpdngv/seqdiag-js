@@ -954,11 +954,11 @@ var NOTE_PADDING  = 5; // Padding inside a note
 var NOTE_OVERLAP  = 15; // Overlap when using a "note over A,B"
 
 var TITLE_MARGIN   = 0;
-var TITLE_PADDING  = 5;
+var TITLE_PADDING  = 8;
 
-var SELF_SIGNAL_WIDTH = 20; // How far out a self signal goes
+var SELF_SIGNAL_WIDTH = 40; // How far out a self signal goes
 var MIN_SIGNAL_WIDTH = 180;
-var SIGNAL_TEXT_PADDING = 15;
+var SIGNAL_TEXT_PADDING = 12;
 
 var PLACEMENT = Diagram.PLACEMENT;
 var LINETYPE  = Diagram.LINETYPE;
@@ -1262,19 +1262,42 @@ _.extend(BaseTheme.prototype, {
   drawTitle: function() {
     var title = this.title_;
     if (title) {
-      this.drawTextBox(title, title.message, TITLE_MARGIN, TITLE_PADDING, this.font_, ALIGN_LEFT);
+      var { rect, text } = this.drawTextBox(title, title.message, TITLE_MARGIN, TITLE_PADDING, this.font_, ALIGN_LEFT);
+      rect.attr('class', 'title');
+      text.attr('class', 'title');
     }
+  },
+
+  headLayout: function() {
+    var diagram = this.diagram;
+    var font    = this.font_;
+
+    if (diagram.title) {
+      var title = this.title_ = {};
+      var bb = this.textBBox(diagram.title, font);
+      title.textBB = bb;
+      title.message = diagram.title;
+
+      title.width  = bb.width  + (TITLE_PADDING + TITLE_MARGIN) * 2;
+      title.height = bb.height + (TITLE_PADDING + TITLE_MARGIN) * 2;
+      title.x = DIAGRAM_MARGIN;
+      title.y = DIAGRAM_MARGIN;
+    }
+
+    this.actorsOffsetY = DIAGRAM_MARGIN + (this.title_ ? this.title_.height : 0);
+    this.actorsHeight_ = 0;
+    this.diagram.actors.forEach(a => { this.actorsHeight_ = Math.max(a.height, this.actorsHeight_); });
+    this.diagram.headerHeight = this.actorsOffsetY + this.actorsHeight_ - ACTOR_MARGIN/* drop bottom margin */ + 1/* ensure fitting stroke */;
+
+    this.paper_.setSize(this.diagram.width, this.diagram.headerHeight);
   },
 
   drawHeader: function(container) {
     this.setupPaper(container);
-    // instead of this.layout(); if the diagram is drawn previously, it is enough, and much faster:
-    this.paper_.setSize(this.diagram.width, this.diagram.height);
-    this.diagram.actors.forEach(a => { this.actorsHeight_ = Math.max(a.height, this.actorsHeight_); });
-    // ----
+    this.headLayout();
+    this.drawTitle();
     _.each(this.diagram.actors, _.bind(function(a) {
-      // Top box
-      var { rect, text } = this.drawActor(a, DIAGRAM_MARGIN, this.actorsHeight_);
+      var { rect, text } = this.drawActor(a, this.actorsOffsetY, this.actorsHeight_);
       rect.attr('class', 'head-actor');
       text.attr('class', 'head-actor');
     }, this));
